@@ -13,7 +13,7 @@ Below you will find the technical definitions of this API.
 
 ### Database schema
 
-![Screen Shot 2020-08-01 at 19.45.19.png](https://media.clubhouse.io/api/attachments/files/clubhouse-assets/5f19eeb5-3e06-481d-bf5c-39c4b25ad481/5f25f081-2bb0-4e5a-89ea-0227d52dc41c/Screen%20Shot%202020-08-01%20at%2019.45.19.png)
+![database-schema.png](database-schema.png)
 
 ### Resource Details
 
