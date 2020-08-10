@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ ! $DOCKER_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+if [ ! -e $LOGS_DIR ]
+then
+    create_logs_dir
+fi
+
+set_storage_permissions
+
+
+docker_sudo docker-compose up

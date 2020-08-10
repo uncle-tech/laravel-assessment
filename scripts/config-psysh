@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if [ ! $BASE_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+ENV_FILE=$BASE_DIR/.env
+
+if [ ! -f $ENV_FILE ]
+then
+    $SCRIPTS_DIR/regenerate-key
+fi
+
+for LINE in $(cat $ENV_FILE)
+do
+    if [ $(echo $LINE | grep PSYSH_CONFIG) ]
+    then
+        PSYSH_CONFIGURED=0
+        break
+    fi
+done
+
+if [ ! $PSYSH_CONFIGURED ]
+then
+    echo '' >> $ENV_FILE # blank line
+    echo 'PSYSH_CONFIG=/mnt/src/tinker/config.php' >> $ENV_FILE
+fi

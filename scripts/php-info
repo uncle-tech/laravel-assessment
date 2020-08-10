@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ ! $DOCKER_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+php_run -r 'phpinfo();'

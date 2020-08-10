@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    image: tours_api
+    ports:
+      - "8008:80"
+    volumes: 
+      - "../:/mnt/src/"

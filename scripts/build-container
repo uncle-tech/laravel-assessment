@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ ! $DOCKER_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+if [ ! -e $LOGS_DIR ]
+then
+    mkdir $LOGS_DIR
+fi
+
+if [ $(current_dir) != $DOCKER_DIR ]
+then
+    cd $DOCKER_DIR
+fi
+
+docker_sudo docker-compose build

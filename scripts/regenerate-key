@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ ! $BASE_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+if [ ! -e $BASE_DIR/.env ]
+then
+    cp $BASE_DIR/.env.example $BASE_DIR/.env
+fi
+
+artisan_run key:generate
