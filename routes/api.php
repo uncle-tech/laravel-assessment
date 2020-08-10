@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+Route::get('/tours', 'TourController@index')->name('all_tours');
+
+Route::get('/tours/{id}', 'TourController@show')->name('get_tours');
+
+Route::post('/tours', 'TourController@store')->name('create_tours');
+
+Route::delete('/tours/{id}', 'TourController@destroy')->name('destroy_tours');
+
+Route::put('/tours/{id}', 'TourController@update')->name('update_tours');
