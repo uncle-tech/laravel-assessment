@@ -143,4 +143,26 @@ class ToursApiTest extends TestCase
         
         $response->assertStatus(200);
     }
+
+    public function testTheRequestForUpdatingATourCreatesANewOneWithTheSpecifiedIdThereWasNotATourWithThatId()
+    {
+        $id = \rand(99999, 9888899998);
+        $data = $this->generateData();
+        $totalBefore = \count($this->repository()->all());
+        $response = $this->json('PUT', '/tours/' . $id, $data);
+
+        $response
+            ->assertStatus(201)
+            ->assertJson([
+                'success' => true,
+            ]);
+
+        $tour = $this->repository()->find($id);
+
+        $this->assertSame('1-1-1', \implode('-', [
+            (int) ($tour->price == $data['price']),
+            (int) $this->equalDates($data['start'], $tour->start),
+            (int) $this->equalDates($data['end'], $tour->end),
+        ]));
+    }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\ToursService;
 
 class ToursController extends Controller
 {
@@ -12,17 +11,12 @@ class ToursController extends Controller
         return app()->make('App\Contracts\ToursRepository');
     }
 
-    protected function service()
-    {
-        return new ToursService;
-    }
-
     /**
      * Lists all the tours
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return response()->json($this->repository()->all());
     }
@@ -67,6 +61,13 @@ class ToursController extends Controller
         }
     }
 
+    protected function updateMethod(int $id) : string
+    {
+        return empty($this->repository()->find($id))
+            ? 'createWithId'
+            : 'update';
+    }
+
     /**
      * Updates the tour data or creates it if the id does not exist.
      *
@@ -77,8 +78,9 @@ class ToursController extends Controller
     public function update(Request $request, int $id)
     {
         try {
+            $method = $this->updateMethod($id);
             return response()->json([
-                'success' => $this->service()->createOrUpdate(
+                'success' => $this->repository()->$method(
                     $id,
                     $request->validate([
                         'start' => 'nullable|date',
@@ -87,7 +89,7 @@ class ToursController extends Controller
                     ])
                 ),
                 'message' => null,
-            ]);
+            ], $method == 'update' ? 200 : 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -13,7 +13,7 @@ interface CRUD
 
     public function find(int $id);
 
-    public function findBy(array $args) : Collection;
+    public function findBy(array $data) : Collection;
 
-    public function update(int $id, array $args) : bool;
+    public function update(int $id, array $data) : bool;
 }
