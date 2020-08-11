@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Repositories;
+use Illuminate\Database\Eloquent\Model;
 use App\Contracts\ToursRepository;
 use App\Tour;
 
 class Tours extends EloquentRepository implements ToursRepository
 {
-    protected function model() : Tour
+    protected function model() : Model
     {
         return new Tour;
     }
