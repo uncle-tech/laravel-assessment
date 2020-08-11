@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/tours', 'ToursController@readAll'); 
+Route::get('/tours/{id}', 'ToursController@readById'); 
+Route::post('/tours', 'ToursController@create');  
+Route::put('/tours/{id}', 'ToursController@update'); 
+Route::delete('/delete/{id}', 'ToursController@delete'); 
