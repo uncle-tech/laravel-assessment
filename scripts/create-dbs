@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ ! $DOCKER_DIR ]
+then
+    . $(dirname $(readlink -f $0))/../scripts/bootstrap
+fi
+
+LIVE_DB=$DATABASE_DIR/live.sqlite.db
+TEST_DB=$DATABASE_DIR/test.sqlite.db
+
+create_dbs()
+{
+    for db_file in $LIVE_DB $TEST_DB
+    do
+        if [ ! -e $db_file ]
+        then
+            touch $db_file
+        fi
+    done
+}
+
+create_dbs
