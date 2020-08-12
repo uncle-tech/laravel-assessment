@@ -3,12 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\FilterService;
 
 class ToursController extends Controller
 {
     protected function repository()
     {
         return app()->make('App\Contracts\ToursRepository');
+    }
+
+    protected function filterService()
+    {
+        return new FilterService;
+    }
+
+    protected function validationArray($required = false)
+    {
+        if ($required)
+            return \array_map(function($attr) {
+                // replaces the nullable by required
+                return \array_merge(
+                    ['required'],
+                    $attr
+                );
+            }, $this->validationArray());
+
+        return [
+            'start' => ['nullable', 'date'],
+            'end' => ['nullable', 'date'],
+            'price' => ['nullable', 'numeric', 'min:0', 'max:9999'],
+        ];
     }
 
     /**
@@ -18,7 +42,10 @@ class ToursController extends Controller
      */
     public function index(Request $request)
     {
-        return response()->json($this->repository()->all());
+        return response()->json($this->filterService()->applyFilters(
+            $this->repository()->all(),
+            $request->query()
+        ));
     }
 
     /**
@@ -41,14 +68,10 @@ class ToursController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = $request->validate([
-                'start' => 'required|date',
-                'end' => 'required|date',
-                'price' => 'required|numeric|min:0|max:9999',
-            ]);
-    
             return response()->json([
-                'id' => $this->repository()->create($data),
+                'id' => $this->repository()->create($request->validate(
+                    $this->validationArray(true)
+                )),
                 'success' => true,
                 'message' => null,
             ], 201);
@@ -82,11 +105,7 @@ class ToursController extends Controller
             return response()->json([
                 'success' => $this->repository()->$method(
                     $id,
-                    $request->validate([
-                        'start' => 'nullable|date',
-                        'end' => 'nullable|date',
-                        'price' => 'nullable|numeric|min:0|max:9999',
-                    ])
+                    $request->validate($this->validationArray())
                 ),
                 'message' => null,
             ], $method == 'update' ? 200 : 201);

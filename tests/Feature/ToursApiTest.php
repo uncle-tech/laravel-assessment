@@ -43,6 +43,47 @@ class ToursApiTest extends TestCase
         );
     }
 
+    public function testTheRequestForListingTheToursCanBeMadeWithFilteringOptions()
+    {
+        \array_map(function($tour) {
+            $this->repository()->destroy($tour['id']);
+        }, $this->repository()->all()->toArray());
+
+        $tour1 = [
+            'start' => '2021-01-01T00:00:00',
+            'end' => '2022-12-31T23:59:59',
+            'price' => 9990,
+        ];
+
+        $tour2 = [
+            'start' => '2021-01-01T00:00:00',
+            'end' => '2021-01-05T23:59:59',
+            'price' => 70,
+        ];
+
+        \array_map(function($tour) {
+            $this->repository()->create($tour);
+        }, [$tour1, $tour2]);
+
+        \array_map(function() {
+            $this->repository()->create($this->generateData());
+        }, \range(1, 5));
+
+        $response1 = $this->get('/tours?price[gt]=90&limit=4');
+        $response2 = $this->get('/tours?start[eq]=2021-01-01T00:00:00');
+
+        $response1->assertStatus(200);
+        $response2->assertStatus(200);
+
+        $this->assertSame(
+            '4-2',
+            \implode('-', [
+                \count(\json_decode($response1->content(), true)),
+                \count(\json_decode($response2->content(), true)),
+            ])
+        );
+    }
+
     /**
      * Wrapper method
      */
