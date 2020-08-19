@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/ping', function (Request $request) {
+    return ['pong' => true];
+});
+
+Route::get('/tours', 'TourController@all');
+Route::get('/tours/?{key}{[operator]}={value}', 'TourController@all');
+Route::get('/tours/?limit={limit}&offset={offset}', 'TourController@all');
+Route::get('/tours/{id}', 'TourController@one');
+Route::post('/tours', 'TourController@new');
+Route::put('/tours/{id}', 'TourController@edit');
+Route::delete('/tours/{id}', 'TourController@delete');
